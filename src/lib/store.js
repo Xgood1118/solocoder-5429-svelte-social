@@ -26,7 +26,47 @@ export const images = writable([])
 export const fans = writable([])
 export const comments = writable([])
 export const analytics = writable([])
-export const tags = writable(DEFAULT_TAGS)
+
+function createTags() {
+  const stored = localStorage.getItem('appTags')
+  const initial = stored ? JSON.parse(stored) : DEFAULT_TAGS
+  const { subscribe, set, update } = writable(initial)
+
+  function persist(value) {
+    localStorage.setItem('appTags', JSON.stringify(value))
+  }
+
+  return {
+    subscribe,
+    update: (fn) => {
+      update(prev => {
+        const next = fn(prev)
+        persist(next)
+        return next
+      })
+    },
+    set: (val) => {
+      set(val)
+      persist(val)
+    },
+    add: (tag) => {
+      update(list => {
+        const next = [...list, tag]
+        persist(next)
+        return next
+      })
+    },
+    remove: (tagId) => {
+      update(list => {
+        const next = list.filter(t => t.id !== tagId)
+        persist(next)
+        return next
+      })
+    }
+  }
+}
+
+export const tags = createTags()
 
 function createSettings() {
   const stored = localStorage.getItem('appSettings')

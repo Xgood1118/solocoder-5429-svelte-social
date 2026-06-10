@@ -99,6 +99,38 @@
         }
         count += data.images.length
       }
+      if (data.analytics && Array.isArray(data.analytics)) {
+        for (const a of data.analytics) {
+          try {
+            await bulkAdd('analytics', [a])
+          } catch (e) {}
+        }
+        count += data.analytics.length
+        analytics.set([...$analytics, ...data.analytics.filter(a => !$analytics.find(x => x.id === a.id))])
+      }
+
+      if (data.tags && Array.isArray(data.tags) && data.tags.length > 0) {
+        const existing = $tags.map(t => t.id)
+        const newTags = data.tags.filter(t => !existing.includes(t.id))
+        if (newTags.length > 0) {
+          tags.set([...$tags, ...newTags])
+          count += newTags.length
+        }
+      }
+
+      if (data.settings && typeof data.settings === 'object') {
+        const merged = {
+          ...$settings,
+          ...data.settings
+        }
+        if (data.settings.replyIdentities) {
+          merged.replyIdentities = {
+            ...$settings.replyIdentities,
+            ...data.settings.replyIdentities
+          }
+        }
+        settings.set(merged)
+      }
       
       importResult = { success: true, count, message: `成功导入 ${count} 条数据` }
       showImportResult = true

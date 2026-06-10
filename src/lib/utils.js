@@ -83,11 +83,11 @@ export function debounce(fn, delay) {
 export function parseMetricsText(text) {
   const metrics = {}
   const patterns = {
-    views: /(阅读|阅读量|浏览|浏览量)\s*[:：]?\s*(\d+)/i,
-    likes: /(点赞|点赞数|赞|👍)\s*[:：]?\s*(\d+)/i,
-    comments: /(评论|评论数|回复|回复数)\s*[:：]?\s*(\d+)/i,
-    shares: /(转发|转发数|分享|分享数)\s*[:：]?\s*(\d+)/i,
-    favorites: /(收藏|收藏数|存|存图)\s*[:：]?\s*(\d+)/i
+    views: /(阅读|阅读数|阅读量|浏览|浏览量|播放|播放数|播放量|PV|访问)\s*[:：]?\s*(\d+)/i,
+    likes: /(点赞|点赞数|赞|👍|在看|喜欢|爱心)\s*[:：]?\s*(\d+)/i,
+    comments: /(评论|评论数|回复|回复数|留言|讨论)\s*[:：]?\s*(\d+)/i,
+    shares: /(转发|转发数|分享|分享数|转|转载)\s*[:：]?\s*(\d+)/i,
+    favorites: /(收藏|收藏数|存|存图|⭐|加收藏)\s*[:：]?\s*(\d+)/i
   }
   
   Object.entries(patterns).forEach(([key, pattern]) => {
